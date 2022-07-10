@@ -17,6 +17,9 @@ type User struct {
 }
 
 func (u *User) CreateUser(c *gin.Context) (err error) {
+	ctx := c.Request.Context()
+	_, span := tracer.Start(ctx, "CRUD : CreateUser")
+	defer span.End()
 
 	cmd := `insert into users (
 		uuid,
@@ -39,6 +42,8 @@ func (u *User) CreateUser(c *gin.Context) (err error) {
 }
 
 func GetUser(c *gin.Context, id int) (user User, err error) {
+	_, span := tracer.Start(c.Request.Context(), "CRUD : GetUser")
+	defer span.End()
 
 	user = User{}
 	cmd := `select id, uuid, name, email, password, created_at
@@ -55,6 +60,8 @@ func GetUser(c *gin.Context, id int) (user User, err error) {
 }
 
 func (u *User) UpdateUser(c *gin.Context) (err error) {
+	_, span := tracer.Start(c.Request.Context(), "CRUD : DeleteUser")
+	defer span.End()
 
 	cmd := `update users set name = $1, email = $2 where id = $3`
 	_, err = Db.Exec(cmd, u.Name, u.Email, u.ID)
@@ -75,6 +82,8 @@ func (u *User) DeleteUser(c *gin.Context) (err error) {
 }
 
 func GetUserByEmail(c *gin.Context, email string) (user User, err error) {
+	_, span := tracer.Start(c.Request.Context(), "CRUD : GetUserByEmail")
+	defer span.End()
 
 	user = User{}
 	cmd := `select id, uuid, name, email, password, created_at

@@ -15,6 +15,9 @@ type signupRequest struct {
 }
 
 func signup(c *gin.Context) {
+	_, span := tracer.Start(c.Request.Context(), "ユーザ登録")
+	defer span.End()
+
 	var json signupRequest
 	if err := c.BindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
