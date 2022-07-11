@@ -17,7 +17,7 @@ type signupRequest struct {
 }
 
 type encryptPassword struct {
-	PassWord string `json:"password`
+	PassWord string `json:"password"`
 }
 
 func createUser(c *gin.Context) {

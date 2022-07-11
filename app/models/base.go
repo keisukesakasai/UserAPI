@@ -5,14 +5,13 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"userapi/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.opentelemetry.io/otel"
 
-	// _ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 var Db *sql.DB
@@ -20,6 +19,7 @@ var Db *sql.DB
 var err error
 var tracer = otel.Tracer("UserAPI-models")
 
+/*
 func init() {
 	fmt.Println("initializing...")
 	Db, err = sql.Open("sqlite3", config.Config.DbName)
@@ -39,8 +39,8 @@ func init() {
 
 	log.Println("initializing...DONE!!!!")
 }
+*/
 
-/*
 func init() {
 	fmt.Println("Now migration...")
 	Db, err = sql.Open("postgres", "host=postgresql.prod.svc.cluster.local port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
@@ -61,7 +61,6 @@ func init() {
 
 	log.Println("initializing...DONE!!!!")
 }
-*/
 
 func createUUID(c *gin.Context) (uuidobj uuid.UUID) {
 	uuidobj, _ = uuid.NewUUID()
