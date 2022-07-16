@@ -11,6 +11,8 @@ import (
 )
 
 func StartMainServer() {
+	log.Println("info: Start Server" + "port: " + serverPort)
+
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 

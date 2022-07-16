@@ -6,23 +6,13 @@ import (
 	"log"
 	"net/http"
 	"userapi/app/models"
+	"userapi/app/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-type signupRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	PassWord string `json:"password"`
-}
-
-type encryptPassword struct {
-	PassWord string `json:"password"`
-}
-
 func createUser(c *gin.Context) {
-	_, span := tracer.Start(c.Request.Context(), "ユーザ登録")
-	defer span.End()
+	utils.LoggerAndCreateSpan(c, "ユーザ登録")
 
 	var json signupRequest
 	if err := c.BindJSON(&json); err != nil {
@@ -30,6 +20,7 @@ func createUser(c *gin.Context) {
 		return
 	}
 
+	utils.LoggerAndCreateSpan(c, json.Email+" のユーザ情報の取得")
 	user, _ := models.GetUserByEmail(c, json.Email)
 	if user.ID != 0 {
 		c.JSON(http.StatusOK, gin.H{
@@ -53,8 +44,7 @@ func createUser(c *gin.Context) {
 }
 
 func getUserByEmail(c *gin.Context) {
-	_, span := tracer.Start(c.Request.Context(), "ユーザ参照")
-	defer span.End()
+	utils.LoggerAndCreateSpan(c, "ユーザ参照")
 
 	var json signupRequest
 	if err := c.BindJSON(&json); err != nil {
@@ -62,6 +52,7 @@ func getUserByEmail(c *gin.Context) {
 		return
 	}
 
+	utils.LoggerAndCreateSpan(c, json.Email+" のユーザ情報の取得")
 	user, _ := models.GetUserByEmail(c, json.Email)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -76,8 +67,7 @@ func getUserByEmail(c *gin.Context) {
 }
 
 func Encrypt(c *gin.Context) {
-	_, span := tracer.Start(c.Request.Context(), "PW 暗号化")
-	defer span.End()
+	utils.LoggerAndCreateSpan(c, "PW暗号化")
 
 	var json encryptPassword
 	if err := c.BindJSON(&json); err != nil {
