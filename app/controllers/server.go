@@ -5,10 +5,16 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"userapi/config"
 
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.opentelemetry.io/otel"
 )
+
+var tracer = otel.Tracer("UserAPI-controllers")
+var deployEnv = config.Config.Deploy
+var serverPort = config.Config.Port
 
 func StartMainServer() {
 	log.Println("info: Start Server" + "port: " + serverPort)

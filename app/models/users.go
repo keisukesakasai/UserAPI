@@ -18,7 +18,7 @@ type User struct {
 }
 
 func (u *User) CreateUser(c *gin.Context) (err error) {
-	utils.LoggerAndCreateSpan(c, "CRUD : CreateUser")
+	defer utils.LoggerAndCreateSpan(c, "CRUD : CreateUser")
 
 	cmd := `insert into users (
 		uuid,
@@ -41,7 +41,7 @@ func (u *User) CreateUser(c *gin.Context) (err error) {
 }
 
 func GetUser(c *gin.Context, id int) (user User, err error) {
-	utils.LoggerAndCreateSpan(c, "CRUD : GetUser")
+	defer utils.LoggerAndCreateSpan(c, "CRUD : GetUser")
 
 	user = User{}
 	cmd := `select id, uuid, name, email, password, created_at
@@ -58,7 +58,7 @@ func GetUser(c *gin.Context, id int) (user User, err error) {
 }
 
 func (u *User) UpdateUser(c *gin.Context) (err error) {
-	utils.LoggerAndCreateSpan(c, "CRUD : UpdateUser")
+	defer utils.LoggerAndCreateSpan(c, "CRUD : UpdateUser").End()
 
 	cmd := `update users set name = $1, email = $2 where id = $3`
 	_, err = Db.Exec(cmd, u.Name, u.Email, u.ID)
@@ -69,7 +69,7 @@ func (u *User) UpdateUser(c *gin.Context) (err error) {
 }
 
 func (u *User) DeleteUser(c *gin.Context) (err error) {
-	utils.LoggerAndCreateSpan(c, "CRUD : DeleteUser")
+	defer utils.LoggerAndCreateSpan(c, "CRUD : DeleteUser").End()
 
 	cmd := `delete from users where id = $1`
 	_, err = Db.Exec(cmd, u.ID)
@@ -80,7 +80,7 @@ func (u *User) DeleteUser(c *gin.Context) (err error) {
 }
 
 func GetUserByEmail(c *gin.Context, email string) (user User, err error) {
-	utils.LoggerAndCreateSpan(c, "CRUD : GetUserByEmail")
+	defer utils.LoggerAndCreateSpan(c, "CRUD : GetUserByEmail").End()
 
 	user = User{}
 	cmd := `select id, uuid, name, email, password, created_at

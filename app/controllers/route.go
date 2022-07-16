@@ -12,7 +12,7 @@ import (
 )
 
 func createUser(c *gin.Context) {
-	utils.LoggerAndCreateSpan(c, "ユーザ登録")
+	utils.LoggerAndCreateSpan(c, "ユーザ登録").End()
 
 	var json signupRequest
 	if err := c.BindJSON(&json); err != nil {
@@ -20,7 +20,7 @@ func createUser(c *gin.Context) {
 		return
 	}
 
-	utils.LoggerAndCreateSpan(c, json.Email+" のユーザ情報の取得")
+	utils.LoggerAndCreateSpan(c, json.Email+" のユーザ情報の取得").End()
 	user, _ := models.GetUserByEmail(c, json.Email)
 	if user.ID != 0 {
 		c.JSON(http.StatusOK, gin.H{
@@ -44,7 +44,7 @@ func createUser(c *gin.Context) {
 }
 
 func getUserByEmail(c *gin.Context) {
-	utils.LoggerAndCreateSpan(c, "ユーザ参照")
+	utils.LoggerAndCreateSpan(c, "ユーザ参照").End()
 
 	var json signupRequest
 	if err := c.BindJSON(&json); err != nil {
@@ -52,7 +52,7 @@ func getUserByEmail(c *gin.Context) {
 		return
 	}
 
-	utils.LoggerAndCreateSpan(c, json.Email+" のユーザ情報の取得")
+	utils.LoggerAndCreateSpan(c, json.Email+" のユーザ情報の取得").End()
 	user, _ := models.GetUserByEmail(c, json.Email)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -67,7 +67,7 @@ func getUserByEmail(c *gin.Context) {
 }
 
 func Encrypt(c *gin.Context) {
-	utils.LoggerAndCreateSpan(c, "PW暗号化")
+	utils.LoggerAndCreateSpan(c, "PW暗号化").End()
 
 	var json encryptPassword
 	if err := c.BindJSON(&json); err != nil {
