@@ -40,7 +40,7 @@ func init() {
 	}
 
 	if deployEnv == "prod" {
-		Db, err = sql.Open("postgres", "host=postgresql.prod.svc.cluster.local port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
+		Db, err = sql.Open("postgres", "host=postgresql.todo.svc.cluster.local port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
 		if err != nil {
 			log.Println(err)
 		}

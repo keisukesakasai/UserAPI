@@ -52,7 +52,7 @@ func initProvider() (func(context.Context) error, error) {
 	}
 
 	if deployEnv == "prod" {
-		conn, err := grpc.DialContext(ctx, "otel-collector-collector.tracing.svc.cluster.local:4318", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+		conn, err := grpc.DialContext(ctx, "otel-collector-collector.observability.svc.cluster.local:4318", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
 		if err != nil {
 			return nil, fmt.Errorf("failed to create gRPC connection to collector: %w", err)
 		}
@@ -78,9 +78,10 @@ func initProvider() (func(context.Context) error, error) {
 			bsp := sdktrace.NewBatchSpanProcessor(traceExporter)
 			tracerProvider = sdktrace.NewTracerProvider(
 				sdktrace.WithSampler(sdktrace.AlwaysSample()),
-				sdktrace.WithResource(res),
+				// sdktrace.WithResource(res),
 				sdktrace.WithSpanProcessor(bsp),
 				sdktrace.WithIDGenerator(idg),
+				sdktrace.WithResource(newResource()),
 			)
 		}
 
@@ -89,4 +90,13 @@ func initProvider() (func(context.Context) error, error) {
 	}
 
 	return tracerProvider.Shutdown, nil
+}
+
+func newResource() *resource.Resource {
+	var LogGroupNames [1]string
+	LogGroupNames[0] = "/aws/eks/fluentbit-cloudwatch/logs"
+	return resource.NewWithAttributes(
+		semconv.SchemaURL,
+		semconv.AWSLogGroupNamesKey.StringSlice(LogGroupNames[:]),
+	)
 }

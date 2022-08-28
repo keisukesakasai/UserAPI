@@ -34,3 +34,6 @@ tmp/
 
 # vscode
 workspace.code-workspace
+
+.DS_Store
+app/.DS_Store
